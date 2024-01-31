@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('index');
+    return view('welcome');
 });
+
+Auth::routes();
+
+Route::group(['prefix' => 'chat-room'], function () {
+    Route::get('/', [RoomController::class, 'index'])->name('room.index');
+});
+
+
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
