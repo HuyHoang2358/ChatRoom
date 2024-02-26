@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello world!</title>
+    <title>Chat Room</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     @vite('resources/css/app.css')
 </head>
@@ -66,38 +66,44 @@
         <div class="grid grid-cols-2 gap-1 h-full">
             <!-- column 2-->
             <div class="col-span-1 h-full bg-[#202441] text-white text-base w-full pl-12 pr-12 py-8">
-                <div class="font-bold  text-3xl flex justify-between">
+                <div class="font-bold text-3xl flex justify-between">
                     <div class="flex justify-start items-center gap-4">
                         <i class="fa-solid fa-users"></i>
                         <p> Chat Room</p>
                     </div>
-                    <button>
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
+                    <div class="flex justify-end items-center gap-4">
+                        <button type="button" onclick="openModal('searchRoomModal')" class="text-white hover:text-orange-400">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                        <button type="button" onclick="openModal('addNewRoomFormModal')" class="text-white hover:text-orange-400">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+
                 </div>
                 <div class="w-ful pl-4 mt-12">
                     <p class="font-semibold">My rooms</p>
-
-                    @for($i=0; $i<=5; $i++)
-                        <a href="#" class="w-full bg-[#262948] hover:bg-[#4289f3] py-3 px-4 my-4 rounded-lg grid grid-cols-3 gap-2 relative">
-                            <div class="col-span-1">
-                                <div class="flex justify-start items-center gap-4">
-                                    <div class="w-8 h-8 rounded-full">
-                                        @include('components.avatar', ['avatar_path' => 'images/avatar.jpg'])
+                    <div class="w-full" id="rooms_list">
+                        @foreach($rooms as $room)
+                            <a href="#" class="w-full bg-[#262948] hover:bg-[#4289f3] py-3 px-4 my-4 rounded-lg grid grid-cols-3 gap-2 relative">
+                                <div class="col-span-1">
+                                    <div class="flex justify-start items-center gap-4">
+                                        <div class="w-8 h-8 rounded-full">
+                                            @include('components.avatar', ['avatar_path' => $room->icon ?? 'images/avatar.jpg'])
+                                        </div>
+                                        <p class="font-bold">{{$room->name}}</p>
                                     </div>
-                                    <p class="font-bold"> Weekly MTG </p>
                                 </div>
-                            </div>
-                            <div class="col-span-2">
-                                <p> ... ... ... ... ...  ... ... ... ... ...</p>
-                            </div>
-                            <div class="absolute top-0 right-0 text-sm mr-2 mt-1  flex justify-end items-center gap-4">
-                                <p class="text-gray-400">2 min ago</p>
-                                @include('components.countNotification', ['number' => 1])
-                            </div>
-                        </a>
-                    @endfor
-
+                                <div class="col-span-2">
+                                    <p> {{$room->description}}</p>
+                                </div>
+                                <div class="absolute top-0 right-0 text-sm mr-2 mt-1  flex justify-end items-center gap-4">
+                                    <p class="text-gray-400">2 min ago</p>
+                                    @include('components.countNotification', ['number' => 1])
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
             </div>
             <!-- column 3 -->
@@ -107,15 +113,84 @@
         </div>
     </div>
 </div>
-<div class="absolute top-0 left-0 h-screen w-full opacity-50 bg-black">
-</div>
-<div class="absolute top-0 left-0 h-screen w-full flex justify-center">
-    <div class=" w-1/2 h-64  self-center p-4 relative">
-        <div class="w-full h-full  bg-white rounded-lg"></div>
-        <button class="absolute top-0 right-0 border border-gray-300 bg-gray-300 w-8 h-8 rounded-full text-red-500 hover:text-white hover:bg-red-500 hover:border-red-500">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-    </div>
-</div>
+
+<!-- add New Room Form Modal -->
+@include('components.modals.roomFormModal')
+@include('components.modals.searchRoomModal')
+
+<script>
+    // TODO: Open modal by Id
+    function openModal(modal_id){
+        console.log("open modal")
+        let addNewRoomFormModal = document.getElementById(modal_id);
+        addNewRoomFormModal.classList.remove('hidden');
+        addNewRoomFormModal.classList.add('visible');
+    }
+    // TODO: Close modal by Id
+    function closeModal(modal_id){
+        console.log("close modal")
+        let addNewRoomFormModal = document.getElementById(modal_id);
+        addNewRoomFormModal.classList.remove('visible');
+        addNewRoomFormModal.classList.add('hidden');
+    }
+</script>
+
+<!-- Import CDN jquery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- Call Ajax handle -->
+<script>
+    $(document).ready(function() {
+        // Bắt sự kiện submit form
+        $('#createRoomForm').submit(function(e) {
+            e.preventDefault();
+            console.log("Form submit!")
+            $.ajax({
+                type: 'POST',
+                url: '{{ route("room.store") }}', // Găn route
+                data: $(this).serialize(), // Dữ liệu form
+                success: function(response) {
+                    // Handle the success response
+                    console.log(response);
+                    // Modifine response
+                    if (response.icon === null){
+                        response.icon = '/images/avatar.jpg';
+                    }
+                    if (response.description == null){
+                        response.description = '';
+                    }
+                    let html = '';
+                    html +=
+                        `<a href="#" class="w-full bg-[#262948] hover:bg-[#4289f3] py-3 px-4 my-4 rounded-lg grid grid-cols-3 gap-2 relative">
+                            <div class="col-span-1">
+                                <div class="flex justify-start items-center gap-4">
+                                    <div class="w-8 h-8 rounded-full">
+                                        <img src="${response.icon}" alt="avatar" class="w-full h-full rounded-full border-2 border-red-500" />
+                                    </div>
+                                    <p class="font-bold">${response.name}</p>
+                                </div>
+                            </div>
+                            <div class="col-span-2">
+                                <p>${response.description}</p>
+                            </div>
+                        </a>`;
+
+                    // Add to top of room list
+                    $('#rooms_list').prepend(html);
+
+                    closeModal('addNewRoomFormModal');
+
+                },
+                error: function(error) {
+                    // Handle the error response
+                    console.log(error);
+                    closeModal('addNewRoomFormModal');
+                },
+            });
+
+            $('#createRoomForm')[0].reset();
+        });
+    });
+</script>
 </body>
 </html>

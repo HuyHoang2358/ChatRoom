@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('icon')->nullable();
+            $table->string('description')->nullable();
             $table->bigInteger('owner_id')->unsigned();
-
             $table->foreign('owner_id')->references('id')->on('users')->cascadeOnDelete();
             $table->timestamps();
         });

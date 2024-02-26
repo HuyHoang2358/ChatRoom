@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Room;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +14,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        // TODO: Seed 5 user account
+        for($i=1; $i<= 5; $i++){
+            User::create([
+                'name' => 'User ' . $i,
+                'email' => 'user' . $i . '@gmail.com',
+                'password' => bcrypt('123456789')]);
+        }
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        // TODO: Seed 5 Room
+        for($i=1; $i<= 5; $i++){
+            Room::create([
+                'name' => 'Room ' . $i,
+                'icon' => '/images/avatar.jpg',
+                'description' => 'Chat for all',
+                'owner_id' => $i
+            ]);
+        }
     }
 }

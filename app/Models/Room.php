@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static create(array $array)
+ * @method static where(string $string, string $string1, $id)
+ */
 class Room extends Model
 {
     use HasFactory;
@@ -12,7 +16,8 @@ class Room extends Model
     protected $fillable = [
         'name',
         'icon',
-        'owner_id'
+        'owner_id',
+        'description'
     ];
     protected $with = ['owner'];
 
@@ -23,6 +28,6 @@ class Room extends Model
 
     public function users(): \Illuminate\Database\Eloquent\Relations\MorphMany
     {
-        return $this->morphMany(User::class, 'roomable');
+        return $this->morphMany(User::class, 'roomAble');
     }
 }
