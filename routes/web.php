@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RoomController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,6 +25,7 @@ Route::group(['prefix' => 'chat-room'], function () {
     Route::get('/', [RoomController::class, 'index'])->name('room.index');
     Route::post('/create-room', [RoomController::class, 'storeRoom'])->name('room.store');
     Route::post('/search/', [RoomController::class, 'search'])->name('room.search');
+    Route::post('/join', [RoomController::class, 'join'])->name('room.join');
 });
 
 

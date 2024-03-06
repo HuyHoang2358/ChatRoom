@@ -6,10 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
-
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * @method static create(array $array)
+ * @property mixed $id
  */
 class User extends Authenticatable
 {
@@ -47,9 +49,16 @@ class User extends Authenticatable
     ];
 
 
-    public function rooms(): \Illuminate\Database\Eloquent\Relations\MorphToMany
+    public function myRooms() : HasMany
     {
-        return $this->morphedByMany(Room::class, 'roomAble');
+        return $this->hasMany(Room::class, 'owner_id', 'id');
+    }
+
+    public function rooms(): BelongsToMany
+    {
+        /* Khai báo quan hệ n-n với model Room với tên bảng trung gian là room_user
+        và khóa ngoại của bảng room_user là user_id và room_id */
+        return $this->belongsToMany(Room::class, 'room_user', 'user_id', 'room_id');
     }
 
 
