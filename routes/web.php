@@ -29,6 +29,8 @@ Route::group(['prefix' => 'chat-room'], function () {
 });
 
 
+Route::get('/chat', [App\Http\Controllers\HomeController::class, 'chat'])->name('chat');
+Route::post('/send-mes', [App\Http\Controllers\HomeController::class, 'sendMes'])->name('sendMes');
 
 
 

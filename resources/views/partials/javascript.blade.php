@@ -1,11 +1,15 @@
 <script>
+
     // TODO: Open modal by Id
     function openModal(modal_id){
         console.log("open modal")
         let addNewRoomFormModal = document.getElementById(modal_id);
-        addNewRoomFormModal.classList.remove('hidden');
-        addNewRoomFormModal.classList.add('visible');
+        if (addNewRoomFormModal) {
+            addNewRoomFormModal.classList.remove('hidden');
+            addNewRoomFormModal.classList.add('visible');
+        }
     }
+
     // TODO: Close modal by Id
     function closeModal(modal_id){
         console.log("close modal")
@@ -15,7 +19,6 @@
     }
 
     // TODO: Turn on notification
-
     function turnOnNotification(message, type){
         const notificationElement = document.getElementById('notification-'+type);
         const notificationMessageElement = document.getElementById('notification-'+type+'-message');
@@ -27,4 +30,6 @@
             notificationElement.classList.add('hidden');
         }, 3000);
     }
+
+
 </script>

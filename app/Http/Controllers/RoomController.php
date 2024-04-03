@@ -20,8 +20,8 @@ class RoomController extends Controller
     {
         $joined_rooms = Auth::user()->rooms;
         $rooms = Room::where('owner_id','=', Auth::user()->id)->get();
-      /*  echo "<pre>";
-        print_r($joined_rooms[0]->users);
+       /* echo "<pre>";
+        print_r($rooms[0]->users);
         echo "</pre>";
         exit();*/
 

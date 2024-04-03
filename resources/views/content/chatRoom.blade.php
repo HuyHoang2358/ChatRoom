@@ -88,7 +88,7 @@
     <!-- Call Ajax handle -->
     <script>
         $(document).ready(function() {
-            // Bắt sự kiện submit form
+            // Handle event when form submit
             $('#createRoomForm').submit(function(e) {
                 e.preventDefault();
                 console.log("Form submit!")
