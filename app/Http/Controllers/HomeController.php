@@ -28,10 +28,11 @@ class HomeController extends Controller
     }
 
     public function chat(){
-        return view('content.chat');
+        return view('content.chat', ["room_id" => 1]);
     }
 
     public function sendMes(Request $request){
-        event(new MessageSent($request->all()["mes"]));
+        $room_id = 1;
+        event(new MessageSent($request->all()["mes"], $room_id));
     }
 }

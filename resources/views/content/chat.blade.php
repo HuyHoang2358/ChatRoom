@@ -18,14 +18,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
+        let room_id = {{ $room_id }}
         Pusher.logToConsole = true;
 
         var pusher = new Pusher('40a39159586441a94da5', {
             cluster: 'ap1'
         });
 
-        var channel = pusher.subscribe('channel-1');
-        channel.bind('my-event', function(data) {
+        var channel = pusher.subscribe('channel-'+room_id);
+        channel.bind('chat-event', function(data) {
             alert(JSON.stringify(data));
         });
 
